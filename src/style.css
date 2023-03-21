@@ -1,0 +1,34 @@
+.search-form {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+input {
+    display: block;
+    margin-right: 20px;
+    padding: 8px 12px 8px 12px;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.gallery-item {
+    text-decoration: none;
+    color: inherit;
+}
+
+.info-item {
+    margin: 0;
+    font-size: 14px;
+}
+
+.load-more {
+    opacity: 0;
+    visibility: hidden;
+    
+}
