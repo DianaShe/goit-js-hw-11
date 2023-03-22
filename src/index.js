@@ -16,7 +16,13 @@ function onFormSubmit(event) {
   apiService.searchQuery = form.elements.searchQuery.value;
   apiService.resetPage();
 
-  apiService.fetchImages().then(renderGallery).then(addButton).then(setObserver).then(showSuccess).catch(handleError);
+  apiService
+    .fetchImages()
+    .then(renderGallery)
+    .then(addButton)
+    .then(setObserver)
+    .then(showSuccess)
+    .catch(handleError);
 }
 
 function addButton() {
@@ -25,8 +31,15 @@ function addButton() {
   galleryEl.after(button);
 }
 
-function createMarkup(data) {
-  return markup = data.hits
+function renderGallery(data) {
+  if (data.hits.length === 0) {
+    throw new Error(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
+  apiService.totalImages = data.totalHits;
+
+  const markup = data.hits
     .map(
       ({
         webformatURL,
@@ -58,39 +71,27 @@ function createMarkup(data) {
         </a>`
     )
     .join('');
-}
 
-
-function renderGallery(data) {
-  if (data.hits.length === 0) {
-    throw new Error(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-  } 
-  apiService.totalImages = data.totalHits;
-  
-  createMarkup(data);
-  
   galleryEl.insertAdjacentHTML('beforeend', markup);
-  
-  const gallery = new SimpleLightbox('.gallery a', {captionDelay : 250});
+
+  const gallery = new SimpleLightbox('.gallery a', { captionDelay: 250 });
   gallery.refresh();
-  
 }
 
 function handleScroll() {
-  const { height: cardHeight } = document.querySelector(".gallery").firstElementChild.getBoundingClientRect();
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
   window.scrollBy({
-      top: cardHeight * 2,
-      behavior: "smooth",
-    }); 
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
 
 function setObserver() {
   const target = document.querySelector('.load-more');
   const observer = new IntersectionObserver(handleIntersection);
   observer.observe(target);
-  
 }
 
 function handleIntersection(entries) {
@@ -100,32 +101,32 @@ function handleIntersection(entries) {
     } else {
       return;
     }
-  })
+  });
 }
 
 function onLoadMore() {
-  
   if (Math.ceil(apiService.totalImages / apiService.limit) < apiService.page) {
     Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
-  
   } else {
-    apiService.fetchImages().then(renderGallery).then(handleScroll).catch(handleError);
-
+    apiService
+      .fetchImages()
+      .then(renderGallery)
+      .then(handleScroll)
+      .catch(handleError);
   }
 }
 
 function clearGalleryContainer() {
   galleryEl.innerHTML = '';
   document.querySelector('.load-more').remove();
-}  
+}
 
 function handleError(error) {
   Notify.failure(error.message);
-} 
+}
 
 function showSuccess() {
   Notify.success(`Hooray! We found ${apiService.totalImages} images.`);
 }
-
