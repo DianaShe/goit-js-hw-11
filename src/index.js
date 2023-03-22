@@ -120,7 +120,10 @@ function onLoadMore() {
 
 function clearGalleryContainer() {
   galleryEl.innerHTML = '';
-  document.querySelector('.load-more').remove();
+  if (document.querySelector('.load-more')) {
+    document.querySelector('.load-more').remove();
+  }
+  
 }
 
 function handleError(error) {
