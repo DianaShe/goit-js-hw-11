@@ -12,7 +12,7 @@ export default class ApiService {
     async fetchImages() {
         this.searchParams = new URLSearchParams({
             q : this.searchQuery,
-            key: process.env.API_KEY,
+            key: `34438281-0af2d234ee7e315fc0f0d81e0`,
             image_type: "photo",
             orientation: "horizontal",
             safesearch: true,
